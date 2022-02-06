@@ -13,7 +13,17 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
   if (url === '/message' && method === 'POST') {
-    console.log(req)
+    const body = []
+    req.on('data', (chunk) => {
+      console.log(chunk);
+      body.push(chunk)
+    })
+
+    req.on('end', () => {
+      const result = Buffer.concat(body).toString()
+      console.log(result);
+    })
+    return res.end();
     fs.writeFileSync('message.txt', 'My name Ahsan');
     res.statusCode = 302;
     res.setHeader('Location', '/');
